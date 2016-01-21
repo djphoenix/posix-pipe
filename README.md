@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/djphoenix/posix-pipe.svg?branch=master)](https://travis-ci.org/djphoenix/posix-pipe)
 
-`posix-pipe` is a `node.js` module providing missing POSIX pipe streams functionality.
+[`posix-pipe`](https://www.npmjs.com/package/posix-pipe) is a `node.js` module providing missing POSIX pipe streams functionality.
 
 ## Usage
 ```javascript
-var pipe = require('pipe');
+var pipe = require('posix-pipe');
 
 var streams = pipe();
 
@@ -16,7 +16,7 @@ var streams = pipe();
 ## Want raw FDs?
 Just use it!
 ```javascript
-var pipe = require('pipe');
+var pipe = require('posix-pipe');
 
 var streams = pipe.pipe(); // [ 23, 24 ] etc.
 ```
