@@ -1,0 +1,36 @@
+{
+  "name": "posix-pipe",
+  "version": "0.1.1",
+  "description": "Posix Pipe",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/djphoenix/posix-pipe"
+  },
+  "keywords": [
+    "posix",
+    "pipe"
+  ],
+  "author": "Yury Popov <github@phoenix.dj>",
+  "license": "MIT",
+  "maintainers": [
+    {
+      "name": "Yury Popov",
+      "url": "https://github.com/djphoenix",
+      "email": "github@phoenix.dj"
+    }
+  ],
+  "devDependencies": {
+    "jscs": "^1.13.1",
+    "jshint": "^2.8.0",
+    "mocha": "^2.2.5"
+  },
+  "main": "./lib",
+  "scripts": {
+    "preinstall": "node-gyp rebuild",
+    "test": "jscs lib/index.js test/*.js && jshint lib/index.js && mocha --reporter=spec test/*-test.js"
+  },
+  "engines": {
+    "node": ">= 0.12.0"
+  }
+}
+
