@@ -1,6 +1,6 @@
 # Posix-Pipe
 
-[![Build Status](https://travis-ci.org/djphoenix/posix-pipe.svg?branch=master)](https://travis-ci.org/djphoenix/posix-pipe)
+[![Build Status](https://travis-ci.org/djphoenix/posix-pipe.svg?branch=master)](https://travis-ci.org/djphoenix/posix-pipe) [![npm version](https://badge.fury.io/js/posix-pipe.svg)](https://badge.fury.io/js/posix-pipe)
 
 [`posix-pipe`](https://www.npmjs.com/package/posix-pipe) is a `node.js` module providing missing POSIX pipe streams functionality.
 
