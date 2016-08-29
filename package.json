@@ -22,7 +22,8 @@
   "devDependencies": {
     "jscs": "^1.13.1",
     "jshint": "^2.8.0",
-    "mocha": "^2.2.5"
+    "mocha": "^2.2.5",
+    "through2": "^2.0.1"
   },
   "main": "./lib",
   "scripts": {
@@ -33,4 +34,3 @@
     "node": ">= 0.12.0"
   }
 }
-

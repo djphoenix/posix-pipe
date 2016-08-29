@@ -1,5 +1,7 @@
 var assert = require('assert');
+var spawn = require('child_process').spawn;
 var pipe = require('../');
+var through = require('through2');
 
 describe('pipe', function() {
   it('should fail for invalid pipes argument', function(done) {
@@ -76,5 +78,27 @@ describe('pipe channel', function() {
       throw new Error('Buffers not equal');
     });
     p[1].write(data);
+  });
+  it('should not retain fd references in child process', function(done) {
+    var data = new Buffer('TESTtestTEST123');
+    var p = pipe();
+    var proc = spawn('cat', [ '/dev/stdin' ],
+        { stdio: [ p[0], 'pipe', 'pipe' ] })
+    var hasData = false;
+    proc.stdout.pipe(through(function(chunk, _, cb) {
+      hasData = true;
+      assert.equal(data.equals(chunk), true,
+        'received & sent buffer should be equal')
+      cb()
+    }, function(cb) {
+      assert.equal(hasData, true,
+        'data should have been received')
+      cb()
+      p[0].destroy();
+      p[1].destroy();
+      delete p
+      done()
+    }))
+    p[1].end(data);
   });
 });

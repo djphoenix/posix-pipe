@@ -7,6 +7,7 @@
 #include <process.h>
 #else
 #include <unistd.h>
+#include <fcntl.h>
 #endif
 #include <v8.h>
 
@@ -21,6 +22,16 @@ void Pipe(const FunctionCallbackInfo<Value>& args) {
 #else
     int pipefd[2];
     int ret = pipe(pipefd);
+    if (ret == -1) {
+        args.GetReturnValue().Set(Undefined(isolate));
+        return;
+    }
+    ret = fcntl(pipefd[0], F_SETFD, FD_CLOEXEC);
+    if (ret == -1) {
+        args.GetReturnValue().Set(Undefined(isolate));
+        return;
+    }
+    ret = fcntl(pipefd[1], F_SETFD, FD_CLOEXEC);
     if (ret == -1) {
         args.GetReturnValue().Set(Undefined(isolate));
         return;
