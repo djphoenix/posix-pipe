@@ -84,6 +84,7 @@ describe('pipe channel', function() {
     var p = pipe();
     var proc = spawn('cat', [ '/dev/stdin' ],
         { stdio: [ p[0], 'pipe', 'pipe' ] })
+    p[0].destroy();
     var hasData = false;
     proc.stdout.pipe(through(function(chunk, _, cb) {
       hasData = true;
@@ -94,7 +95,6 @@ describe('pipe channel', function() {
       assert.equal(hasData, true,
         'data should have been received')
       cb()
-      p[0].destroy();
       p[1].destroy();
       delete p
       done()
