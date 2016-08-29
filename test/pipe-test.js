@@ -102,7 +102,7 @@ describe('pipe channel', function () {
   })
   it('should pass data from child process', function (done) {
     var p = pipe()
-    var proc = spawn('cat', [ '/dev/stdin' ],
+    var proc = spawn('cat',
         { stdio: [ 'pipe', p[1], 'pipe' ] })
     proc.on('error', function (e) { throw e })
     p[1].destroy()
