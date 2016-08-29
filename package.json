@@ -20,15 +20,14 @@
     }
   ],
   "devDependencies": {
-    "jscs": "^1.13.1",
-    "jshint": "^2.8.0",
+    "standard": "^8.0.0",
     "mocha": "^2.2.5",
     "through2": "^2.0.1"
   },
   "main": "./lib",
   "scripts": {
     "preinstall": "node-gyp rebuild",
-    "test": "jscs lib/index.js test/*.js && jshint lib/index.js && mocha --reporter=spec test/*-test.js"
+    "test": "standard && mocha --reporter=spec test/*-test.js"
   },
   "engines": {
     "node": ">= 0.12.0"
