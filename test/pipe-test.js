@@ -68,8 +68,8 @@ describe('pipe', function () {
 })
 
 describe('pipe channel', function () {
+  var data = new Buffer('TESTtestTEST123')
   it('should pass data', function (done) {
-    var data = new Buffer('TESTtestTEST123')
     var p = pipe()
     p[0].on('data', function (d) {
       p[0].destroy()
@@ -79,11 +79,11 @@ describe('pipe channel', function () {
     })
     p[1].write(data)
   })
-  it('should not retain fd references in child process', function (done) {
-    var data = new Buffer('TESTtestTEST123')
+  it('should pass data to child process', function (done) {
     var p = pipe()
     var proc = spawn('cat', [ '/dev/stdin' ],
         { stdio: [ p[0], 'pipe', 'pipe' ] })
+    proc.on('error', function (e) { throw e })
     p[0].destroy()
     var hasData = false
     proc.stdout.pipe(through(function (chunk, _, cb) {
@@ -99,5 +99,26 @@ describe('pipe channel', function () {
       done()
     }))
     p[1].end(data)
+  })
+  it('should pass data from child process', function (done) {
+    var p = pipe()
+    var proc = spawn('cat', [ '/dev/stdin' ],
+        { stdio: [ 'pipe', p[1], 'pipe' ] })
+    proc.on('error', function (e) { throw e })
+    p[1].destroy()
+    var hasData = false
+    p[0].pipe(through(function (chunk, _, cb) {
+      hasData = true
+      assert.equal(data.equals(chunk), true,
+        'received & sent buffer should be equal')
+      cb()
+    }, function (cb) {
+      assert.equal(hasData, true,
+        'data should have been received')
+      cb()
+      p[0].destroy()
+      done()
+    }))
+    proc.stdin.end(data)
   })
 })
