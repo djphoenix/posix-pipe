@@ -6,8 +6,8 @@ const through = require('through2')
 const describe = global.describe
 const it = global.it
 
-describe('pipe', function () {
-  it('should fail for invalid pipes argument', function (done) {
+describe('pipe', () => {
+  it('should fail for invalid pipes argument', done => {
     try {
       pipe(null)
     } catch (e) {
@@ -16,7 +16,7 @@ describe('pipe', function () {
     }
     throw new Error('Not thrown')
   })
-  it('should fail for invalid pipes array elements', function (done) {
+  it('should fail for invalid pipes array elements', done => {
     try {
       pipe([ null, '' ])
     } catch (e) {
@@ -25,7 +25,7 @@ describe('pipe', function () {
     }
     throw new Error('Not thrown')
   })
-  it('should fail for invalid pipefds', function (done) {
+  it('should fail for invalid pipefds', done => {
     try {
       pipe([ -1, -1 ])
     } catch (e) {
@@ -34,7 +34,7 @@ describe('pipe', function () {
     }
     throw new Error('Not thrown')
   })
-  it('should fail for TTY pipefds', function (done) {
+  it('should fail for TTY pipefds', done => {
     try {
       pipe([ 0, 1 ])
     } catch (e) {
@@ -43,7 +43,7 @@ describe('pipe', function () {
     }
     throw new Error('Not thrown')
   })
-  it('should fail for not UNKNOWN pipefds', function (done) {
+  it('should fail for not UNKNOWN pipefds', done => {
     try {
       pipe([ 65534, 65535 ])
     } catch (e) {
@@ -52,14 +52,14 @@ describe('pipe', function () {
     }
     throw new Error('Not thrown')
   })
-  it('should not fail for valid pipefds', function (done) {
+  it('should not fail for valid pipefds', done => {
     const fds = pipe.pipe()
     const p = pipe(fds)
     p[0].destroy()
     p[1].destroy()
     done()
   })
-  it('should not fail for undefined fds (auto-generate)', function (done) {
+  it('should not fail for undefined fds (auto-generate)', done => {
     const p = pipe()
     p[0].destroy()
     p[1].destroy()
@@ -67,11 +67,11 @@ describe('pipe', function () {
   })
 })
 
-describe('pipe channel', function () {
+describe('pipe channel', () => {
   const data = Buffer.from('TESTtestTEST123')
-  it('should pass data', function (done) {
+  it('should pass data', done => {
     const p = pipe()
-    p[0].on('data', function (d) {
+    p[0].on('data', d => {
       p[0].destroy()
       p[1].destroy()
       if (data.equals(d)) return done()
@@ -79,19 +79,19 @@ describe('pipe channel', function () {
     })
     p[1].write(data)
   })
-  it('should pass data to child process', function (done) {
+  it('should pass data to child process', done => {
     const p = pipe()
     const proc = spawn('cat', [ '/dev/stdin' ],
         { stdio: [ p[0], 'pipe', 'pipe' ] })
-    proc.on('error', function (e) { throw e })
+    proc.on('error', e => { throw e })
     p[0].destroy()
     let hasData = false
-    proc.stdout.pipe(through(function (chunk, _, cb) {
+    proc.stdout.pipe(through((chunk, _, cb) => {
       hasData = true
       assert.equal(data.equals(chunk), true,
         'received & sent buffer should be equal')
       cb()
-    }, function (cb) {
+    }, cb => {
       assert.equal(hasData, true,
         'data should have been received')
       cb()
@@ -100,19 +100,19 @@ describe('pipe channel', function () {
     }))
     p[1].end(data)
   })
-  it('should pass data from child process', function (done) {
+  it('should pass data from child process', done => {
     const p = pipe()
     const proc = spawn('cat',
         { stdio: [ 'pipe', p[1], 'pipe' ] })
-    proc.on('error', function (e) { throw e })
+    proc.on('error', e => { throw e })
     p[1].destroy()
     let hasData = false
-    p[0].pipe(through(function (chunk, _, cb) {
+    p[0].pipe(through((chunk, _, cb) => {
       hasData = true
       assert.equal(data.equals(chunk), true,
         'received & sent buffer should be equal')
       cb()
-    }, function (cb) {
+    }, cb => {
       assert.equal(hasData, true,
         'data should have been received')
       cb()
