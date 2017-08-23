@@ -1,10 +1,10 @@
-var assert = require('assert')
-var spawn = require('child_process').spawn
-var pipe = require('../')
-var through = require('through2')
+const assert = require('assert')
+const spawn = require('child_process').spawn
+const pipe = require('../')
+const through = require('through2')
 
-var describe = global.describe
-var it = global.it
+const describe = global.describe
+const it = global.it
 
 describe('pipe', function () {
   it('should fail for invalid pipes argument', function (done) {
@@ -53,14 +53,14 @@ describe('pipe', function () {
     throw new Error('Not thrown')
   })
   it('should not fail for valid pipefds', function (done) {
-    var fds = pipe.pipe()
-    var p = pipe(fds)
+    const fds = pipe.pipe()
+    const p = pipe(fds)
     p[0].destroy()
     p[1].destroy()
     done()
   })
   it('should not fail for undefined fds (auto-generate)', function (done) {
-    var p = pipe()
+    const p = pipe()
     p[0].destroy()
     p[1].destroy()
     done()
@@ -68,9 +68,9 @@ describe('pipe', function () {
 })
 
 describe('pipe channel', function () {
-  var data = new Buffer('TESTtestTEST123')
+  const data = Buffer.from('TESTtestTEST123')
   it('should pass data', function (done) {
-    var p = pipe()
+    const p = pipe()
     p[0].on('data', function (d) {
       p[0].destroy()
       p[1].destroy()
@@ -80,12 +80,12 @@ describe('pipe channel', function () {
     p[1].write(data)
   })
   it('should pass data to child process', function (done) {
-    var p = pipe()
-    var proc = spawn('cat', [ '/dev/stdin' ],
+    const p = pipe()
+    const proc = spawn('cat', [ '/dev/stdin' ],
         { stdio: [ p[0], 'pipe', 'pipe' ] })
     proc.on('error', function (e) { throw e })
     p[0].destroy()
-    var hasData = false
+    let hasData = false
     proc.stdout.pipe(through(function (chunk, _, cb) {
       hasData = true
       assert.equal(data.equals(chunk), true,
@@ -101,12 +101,12 @@ describe('pipe channel', function () {
     p[1].end(data)
   })
   it('should pass data from child process', function (done) {
-    var p = pipe()
-    var proc = spawn('cat',
+    const p = pipe()
+    const proc = spawn('cat',
         { stdio: [ 'pipe', p[1], 'pipe' ] })
     proc.on('error', function (e) { throw e })
     p[1].destroy()
-    var hasData = false
+    let hasData = false
     p[0].pipe(through(function (chunk, _, cb) {
       hasData = true
       assert.equal(data.equals(chunk), true,
