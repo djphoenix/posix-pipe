@@ -30,6 +30,6 @@
     "test": "standard && mocha --reporter=spec test/*-test.js"
   },
   "engines": {
-    "node": ">= 0.12.0"
+    "node": ">= 4.0"
   }
 }
